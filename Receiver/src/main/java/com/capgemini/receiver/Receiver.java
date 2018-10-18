@@ -1,8 +1,4 @@
 package com.capgemini.receiver;
-
-
-
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSConsumer;
@@ -14,8 +10,6 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-
 public class Receiver {
 	public static void main(String args[]) {
 ConnectionFactory connectionFactory=null;
@@ -38,19 +32,25 @@ try {
 	e.printStackTrace();
 } try(JMSContext context=connectionFactory.createContext()){
 JMSConsumer consumer=context.createConsumer(queue);
-String body=consumer.receiveBody(String.class);
-System.out.println(body);
-/*catch(JMSException e) {
+TextMessage message;
+while((message=(TextMessage) consumer.receive())!=null) {
+	System.out.println(message.getText());
+}
+}
+/*String body=consumer.receiveBody(String.class);
+System.out.println(body);*/
+catch(JMSException e) {
 	e.printStackTrace();
 
-} finally {
+/*} finally {
 	if (connection != null)
 		try {
 			connection.close();
 		} catch (JMSException e) {
-			e.printStackTrace();
-		}*/
-}
-}
+			e.printStackTrace();*/
+		}
+		}
+	}
 
-}
+
+
